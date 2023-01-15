@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { Header } from "../../components/Header";
 import { SearchForm } from "../../components/SearchForm";
 import { Summary } from "../../components/Summary";
+import { TransactionsContext } from "../../contexts/TransactionContext";
 import {
   PriceHighLight,
   TransactionsContainer,
@@ -33,20 +34,7 @@ export function Transactions() {
   // })
   // }, []);
 
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-  // FORMA PARA CHAMAR A REQUISIÇÃO UTILIZANDO ASYNC AWAIT E USEFFECT (QUE NÃO PODE SER ASSINCRONO):
-  async function LoadTransactions() {
-    const response = await fetch("http://localhost:3333/transactions");
-    const data = await response.json();
-
-    setTransactions(data);
-    console.log(data);
-  }
-
-  useEffect(() => {
-    LoadTransactions();
-  }, []);
+  const { transactions } = useContext(TransactionsContext);
 
   return (
     <div>
