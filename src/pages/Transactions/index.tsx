@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useContextSelector } from "use-context-selector";
 import { Header } from "../../components/Header";
 import { SearchForm } from "../../components/SearchForm";
 import { Summary } from "../../components/Summary";
@@ -35,7 +36,9 @@ export function Transactions() {
   // })
   // }, []);
 
-  const { transactions } = useContext(TransactionsContext);
+  const transactions = useContextSelector(TransactionsContext, (context: any) => {
+    return context.transactions
+  });
 
   return (
     <div>
@@ -47,7 +50,7 @@ export function Transactions() {
 
         <TransactionsTable>
           <tbody>
-            {transactions.map((transaction) => {
+            {transactions.map((transaction: any) => {
               return (
                 <tr key={transaction.id}>
                   <td width="50%">{transaction.description}</td>

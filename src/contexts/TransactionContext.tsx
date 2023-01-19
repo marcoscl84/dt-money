@@ -1,4 +1,4 @@
-import { Children, createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { api } from "../lib/axios";
 
 interface Transaction {
