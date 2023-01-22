@@ -6,6 +6,29 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext } from "react";
 import { TransactionsContext } from "../../contexts/TransactionContext";
 import { useContextSelector } from "use-context-selector";
+import { memo } from "react";
+
+/* 
+  Porque um componente renderiza?
+
+  - Hooks changed (mudou estado, contexto, reducer)
+  - Props changed (mudou propriedas)
+  - Parent rerendered (componente pai renderizou)
+
+  Fluxo de renderezição:
+
+    1º React recria o HTML da interface daquele componente
+    2º Compara a versão recriada do HTML com a versão anterior
+    3º Se algo mudou, reescreve o HTML na tela
+
+    Memo: 
+    
+    0º (ocorre antes dos passos anteriores) Hooks changed, Props changed (deep comparison)
+    0.1º Compara versão anterior dos hooks e props
+    0.2º Se algo mudou, permitirá a renderização
+
+    * Só vale a pena utilizar o memo, quando o HTML a ser renderizado for muito pesado
+*/
 
 const searchFormSchema = z.object({
   query: z.string(),
@@ -13,7 +36,7 @@ const searchFormSchema = z.object({
 
 type SearchFormInputs = z.infer<typeof searchFormSchema>;
 
-export function SearchForm() {
+function SearchFormComponent() {
   const fetchTransactions = useContextSelector(TransactionsContext, (context: any) =>{
     return context.fetchTransactions
   });
@@ -48,3 +71,5 @@ export function SearchForm() {
     </SearchFormContainer>
   );
 }
+ 
+export const SearchForm = memo(SearchFormComponent)
