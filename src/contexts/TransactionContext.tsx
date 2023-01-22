@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect, useState, useCallback } from "react";
 import { api } from "../lib/axios";
 
 interface Transaction {
@@ -35,29 +35,20 @@ export function TransactionsProvider({ children }: TransactionProviderProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   // FORMA PARA CHAMAR A REQUISIÇÃO UTILIZANDO ASYNC AWAIT E USEFFECT (QUE NÃO PODE SER ASSINCRONO):
-  async function fetchTransactions(query?: string) {
-    // const url = new URL("http://localhost:3333/transactions");
-
-    // if (query) {
-    //   url.searchParams.append("q", query);
-    // }
-
-    // const response = await fetch(url);
-    // const data = await response.json();
-
+  const fetchTransactions = useCallback(async (query?: string) => {
     const response = await api.get("transactions", {
-      params: {
-        _sort: "createdAt",
-        _order: "desc",
-        q: query,
-      },
-    });
+    params: {
+      _sort: "createdAt",
+      _order: "desc",
+      q: query,
+    },
+  });
 
-    setTransactions(response.data);
-    console.log(response.data);
-  }
+  setTransactions(response.data);
+  // console.log(response.data);
+}, []) 
 
-  async function createTransaction(data: CreateTransactionInput) {
+  const createTransaction = useCallback(async (data: CreateTransactionInput) => {
     const response = await api.post("transactions", {
       description: data.description,
       category: data.category,
@@ -69,7 +60,7 @@ export function TransactionsProvider({ children }: TransactionProviderProps) {
     console.log(response.data);
 
     setTransactions((state) => [response.data, ...state]);
-  }
+  }, [])
 
   useEffect(() => {
     fetchTransactions();
